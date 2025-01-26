@@ -93,6 +93,7 @@ class SplitTables(luigi.Task):
 
     def run(self):
         os.makedirs(self.output().path, exist_ok=True)  # Создаем выходной каталог, если он не существует
+        #processed_files = []  # Список для хранения обработанных файлов
         for root, _, files in os.walk(self.input_dir):  # Проходим по всем файлам в каталоге
             for file in files:
                 if file.endswith(".txt"):  # Проверяем на наличие текстовых файлов
@@ -123,6 +124,13 @@ class SplitTables(luigi.Task):
                     for key, df in dfs.items():
                         output_file = os.path.join(self.output().path, f"{key}.tsv")  
                         df.to_csv(output_file, sep="\t", index=False)  # Сохраняем каждый DataFrame как TSV файл
+
+                        ##processed_files.append(file_path)  # Добавляем файл в список обработанных
+
+                    # Удаление обработанных текстовых файлов
+                    ##for file_path in processed_files:
+                    ##    os.remove(file_path)
+                   
 
 # Задача 5: Удаление ненужных колонок
 class TrimColumns(luigi.Task):
