@@ -121,8 +121,8 @@ class SplitTables(luigi.Task):
                             dfs[write_key] = pd.read_csv(fio, sep="\t")  # Читаем оставшиеся данные в последний DataFrame
 
                     for key, df in dfs.items():
-                        output_file = os.path.join(self.output().path, f"{key}.csv")  
-                        df.to_csv(output_file, sep=",", index=False)  # Сохраняем каждый DataFrame как CSV файл
+                        output_file = os.path.join(self.output().path, f"{key}.tsv")  
+                        df.to_csv(output_file, sep="\t", index=False)  # Сохраняем каждый DataFrame как TSV файл
 
 # Задача 5: Удаление ненужных колонок
 class TrimColumns(luigi.Task):
@@ -140,9 +140,9 @@ class TrimColumns(luigi.Task):
         
         for root, _, files in os.walk(self.input_dir):  # Проходим по всем файлам в каталоге
             for file in files:
-                if file.endswith("Probes.csv"):  # Проверяем на наличие файлов Probes.csv
+                if file.endswith("Probes.tsv"):  # Проверяем на наличие файлов Probes.tsv
                     file_path = os.path.join(root, file)
-                    df = pd.read_csv(file_path, sep=",")  # Читаем CSV файл в DataFrame
+                    df = pd.read_csv(file_path, sep="\t")  # Читаем TSV файл в DataFrame
                     
                     columns_to_remove = [
                         "Definition", 
@@ -159,7 +159,7 @@ class TrimColumns(luigi.Task):
                     trimmed_df.to_csv(
                         os.path.join(self.output().path, file),
                         sep=",",
-                        index=False   # Сохраняем обрезанный DataFrame как CSV файл без индексации
+                        index=False   # Сохраняем обрезанный DataFrame как TSV файл без индексации
                     )
 
 # Главный пайплайн задач 
